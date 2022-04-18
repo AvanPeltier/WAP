@@ -22,11 +22,16 @@ RtcDS1307<TwoWire> Rtc(Wire);
 /* for normal hardware wire use above */
 
 
+int START_DAY;
 const char data[] = "what time is it";
+bool hasRun = false;
 
 void setup () 
 {
     Serial.begin(57600);
+    pinMode(A4, INPUT_PULLUP);
+    pinMode(A5, INPUT_PULLUP);
+    pinMode(9, OUTPUT);
 
     Serial.print("compiled: ");
     Serial.print(__DATE__);
@@ -38,9 +43,11 @@ void setup ()
     // Wire.begin(0, 2); // due to limited pins, use pin 0 and 2 for SDA, SCL
     
     Rtc.Begin();
+    
 
     RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
     printDateTime(compiled);
+    START_DAY = compiled.Day();
     Serial.println();
 
     if (!Rtc.IsDateTimeValid()) 
@@ -86,7 +93,8 @@ void setup ()
 }
 
 void loop () 
-{
+{ 
+    
     if (!Rtc.IsDateTimeValid()) 
     {
         if (Rtc.LastError() != 0)
@@ -106,11 +114,18 @@ void loop ()
     }
 
     RtcDateTime now = Rtc.GetDateTime();
-
     printDateTime(now);
     Serial.println();
-
-    delay(5000);
+    if (now.Minute() != 0){
+       hasRun = false;
+    }
+    if(now.Day() == START_DAY && now.Minute() == 0 || now.Minute() == 30 && now.Year() >= 2022 && !hasRun){
+      digitalWrite(9, HIGH);
+      delay(15000);
+      digitalWrite(9, LOW);
+      hasRun = true;
+    }
+    
 
     // read data
 
@@ -149,7 +164,7 @@ void loop ()
     }
 
     
-    delay(5000);
+    delay(1000);
 }
 
 
