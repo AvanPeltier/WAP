@@ -1,4 +1,5 @@
 # WAP
-Watering and Planting is a project to create a waterer with a real time clock, pump, and a moisture sensor
+Watering and Planting is a project to create a plant waterer with a real time clock, pump, and a moisture sensor
 
-This project utilizes a a real time clock and moisture sensor to decide when to water a plant located onfloor at CSH @RIT/
+The program follows I2C protocal to send start data to a clock that continually runs. Every week a relay is triggered to provide water for the plant.
+Future expansion: moisture sensor will help prevent over-wartering and detect when water source is empty.
